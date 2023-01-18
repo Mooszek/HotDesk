@@ -9,6 +9,10 @@ def index(request):
     context = {'page_text':"Main page",}
     return render( request, 'hotdesk/index.html', context)
 
+def about(request):
+    context = {'page_text':"About Page",}
+    return render( request, 'hotdesk/about.html', context)
+
 def reservation(request, reservation_id):
     try:
         reservation_object = Reservation.objects.get(pk=reservation_id)

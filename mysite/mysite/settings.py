@@ -37,6 +37,7 @@ AUTH_USER_MODEL = 'hotdesk.User'
 
 INSTALLED_APPS = [
     'hotdesk.apps.HotdeskConfig',
+    'users.apps.UsersConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
