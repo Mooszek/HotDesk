@@ -19,13 +19,15 @@
     <header class="site-header">
         <nav class="navbar navbar-expand-md navbar-dark bg fixed-top">
           <div class="container">
-            <a class="navbar-brand mr-4" href="{% url 'hotdesk-index' %}">Hotdesk App</a>
+            <a class="navbar-brand mr-5" href="{% url 'hotdesk-index' %}">Hotdesk App</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarToggle">
               <div class="navbar-nav mr-auto">
                 <a class="nav-item nav-link" href="{% url 'hotdesk-index' %}">Home</a>
+                <a class="nav-item nav-link" href="{% url 'hotdesk-new-reservation' %}">New reservation</a>
+                <a class="nav-item nav-link" href="{% url 'hotdesk-reservations' %}">My reservations</a>
                 <a class="nav-item nav-link" href="{% url 'hotdesk-about' %}">About</a>
               </div>
               <!-- Navbar Right Side -->
