@@ -1,6 +1,7 @@
 from django.http import HttpResponse, Http404
 from django.template import loader
 from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
 from hotdesk.models import Reservation
 
 # Create your views here.
@@ -9,10 +10,12 @@ def index(request):
     context = {'page_text':"Main page",}
     return render( request, 'hotdesk/index.html', context)
 
+@login_required
 def new_reservation(request):
     context = {'page_text':"Make new reservation",}
     return render( request, 'hotdesk/new_reservation.html', context)
 
+@login_required
 def reservations(request):
     context = {'page_text':"Previous reservations",}
     return render( request, 'hotdesk/reservations.html', context)
@@ -21,6 +24,7 @@ def about(request):
     context = {'page_text':"About Page",}
     return render( request, 'hotdesk/about.html', context)
 
+@login_required
 def reservation(request, reservation_id):
     try:
         reservation_object = Reservation.objects.get(pk=reservation_id)
