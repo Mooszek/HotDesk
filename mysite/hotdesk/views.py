@@ -9,10 +9,6 @@ def index(request):
     context = {'page_text':"Main page",}
     return render( request, 'hotdesk/index.html', context)
 
-def about(request):
-    context = {'page_text':"About Page",}
-    return render( request, 'hotdesk/about.html', context)
-
 def new_reservation(request):
     context = {'page_text':"Make new reservation",}
     return render( request, 'hotdesk/new_reservation.html', context)
@@ -20,6 +16,10 @@ def new_reservation(request):
 def reservations(request):
     context = {'page_text':"Previous reservations",}
     return render( request, 'hotdesk/reservations.html', context)
+
+def about(request):
+    context = {'page_text':"About Page",}
+    return render( request, 'hotdesk/about.html', context)
 
 def reservation(request, reservation_id):
     try:
