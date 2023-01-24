@@ -1,5 +1,15 @@
 {% extends "hotdesk/base.html" %}
 
 {% block content %}
-    <h1>{{page_text}}</h1>
+    <div>
+        <h1>Welcome {{user.first_name}}!</h1>
+    </div>
+    <div class="homepage">
+        <div>
+            <h3>You currently don't have any reservations.</h3>
+        </div>
+        <div>
+            <h3>If you would like to reserve a desk, <a href="{% url 'hotdesk-new-reservation' %}"> click here</a>.</h3>
+        </div>
+    </div>
 {% endblock content%}

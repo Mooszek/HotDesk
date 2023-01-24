@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from hotdesk.models import Reservation
 
 # Create your views here.
-
+@login_required
 def index(request):
     context = {'page_text':"Main page",}
     return render( request, 'hotdesk/index.html', context)
