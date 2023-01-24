@@ -1,5 +1,27 @@
 {% extends "hotdesk/base.html" %}
 
 {% block content %}
-    <h1>Previous reservations</h1>
+    <div>
+        <h2>Active reservations</h2>
+    </div>
+    {% for reservations in reservations %}
+    <div>
+        <article class="media content-section">
+        <img class="rounded-circle article-img" src="{{ reservations.user.profile.image.url }}">
+        <div class="media-body">
+                <div class="article-metadata">
+                <a class="mr-3" href="#">{{ reservations.user }}</a>
+                <a class="text-muted">{{ reservations.start_date|date:"F d, Y" }} - </a>
+                <a class="text-muted">{{ reservations.end_date|date:"F d, Y" }}</a>
+                </div>
+                <h4><a class="article-title" href="#">{{ reservations.desk }}</a></h4>
+                <p class="article-content">Status - {{ reservations.status }}</p>
+                <a class="btn btn-outline-danger" href="{% url 'hotdesk-reservation-delete' pk=reservations.id %}">Cancel reservation</a>
+        </div>
+        </article>
+    </div>
+    {% endfor %}
+    <div>
+        <h2>Historical reservations</h2>
+    </div>
 {% endblock content%}

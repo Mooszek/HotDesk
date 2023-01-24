@@ -6,10 +6,26 @@
     </div>
     <div class="homepage">
         <div>
-            <h3>You currently don't have any reservations.</h3>
-        </div>
-        <div>
             <h3>If you would like to reserve a desk, <a href="{% url 'hotdesk-new-reservation' %}"> click here</a>.</h3>
         </div>
     </div>
+    <div>
+        <h2>See who is in the office today:</h2>
+    </div>
+    {% for reservations in reservations %}
+    <div>
+        <article class="media content-section">
+        <img class="rounded-circle article-img" src="{{ reservations.user.profile.image.url }}">
+        <div class="media-body">
+                <div class="article-metadata">
+                <a class="article-title">{{ reservations.user.first_name }} {{ reservations.user.last_name }}</a>
+                <!-- <a class="text-muted">{{ reservations.start_date|date:"F d, Y" }} - </a>
+                <a class="text-muted">{{ reservations.end_date|date:"F d, Y" }}</a> -->
+                </div>
+                <h4><a class="article-title">{{ reservations.desk.room }} -</a>
+                <a class="article-title">{{ reservations.desk }}</a></h4>
+        </div>
+        </article>
+    </div>
+    {% endfor %}
 {% endblock content%}

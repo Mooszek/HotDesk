@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 from users.models import User
 
 # Create your models here.
@@ -30,3 +31,6 @@ class Reservation(models.Model):
 
     def __str__(self) -> str:
         return f"Reservation ID: {self.id}"
+
+    def get_absolute_url(self):
+        return reverse('hotdesk-reservation', kwargs={'pk': self.pk})
