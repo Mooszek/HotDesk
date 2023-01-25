@@ -1,12 +1,14 @@
-#from django.http import HttpResponse, Http404
-#from django.template import loader
-from django.shortcuts import render
+
+from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, FormView
 from django.urls import reverse_lazy
-from hotdesk.models import Reservation
+from django.contrib import messages
+from hotdesk.models import Reservation, Room, Desk
 from datetime import date
+
+from .forms import SearchRoomForm
 
 # Create your views here.
 @login_required
@@ -14,20 +16,7 @@ def index(request):
     context = {'page_text':"Main page",}
     return render( request, 'hotdesk/index.html', context)
 
-#class based view for homepage
 
-
-# @login_required
-# def new_reservation(request):
-#     context = {'page_text':"Make new reservation",}
-#     return render( request, 'hotdesk/new_reservation.html', context)
-
-# @login_required
-# def reservations(request):
-#     context = {'page_text':"Previous reservations",}
-#     return render( request, 'hotdesk/reservations.html', context)
-
-#class based view for previous reservations
 class TodaysReservationListView(ListView):
     model = Reservation
     template_name = 'hotdesk/index.html'
@@ -54,33 +43,33 @@ class ReservationDetailView(LoginRequiredMixin, DetailView):
     def get_queryset(self):
         return Reservation.objects.filter(user=self.request.user)
 
-#class to create single reservation
-class ReservationCreateView(LoginRequiredMixin, CreateView):
-    model = Reservation
-    fields = [ 'desk', 'start_date', 'end_date']
-    template_name = 'hotdesk/new_reservation.html'
-    success_url = reverse_lazy('hotdesk-reservations')
+# # not used
+# class ReservationCreateView(LoginRequiredMixin, CreateView):
+#     model = Reservation
+#     fields = [ 'desk', 'start_date', 'end_date']
+#     template_name = 'hotdesk/new_reservation.html'
+#     success_url = reverse_lazy('hotdesk-reservations')
 
-    def form_valid(self, form):
-        form.instance.user = self.request.user
-        return super().form_valid(form)
+#     def form_valid(self, form):
+#         form.instance.user = self.request.user
+#         return super().form_valid(form)
 
-#class to update single reservation
-class ReservationUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
-    model = Reservation
-    fields = [ 'desk', 'start_date', 'end_date']
-    template_name = 'hotdesk/new_reservation.html'
-    success_url = reverse_lazy('hotdesk-reservations')
+# #not used
+# class ReservationUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+#     model = Reservation
+#     fields = [ 'desk', 'start_date', 'end_date']
+#     template_name = 'hotdesk/new_reservation.html'
+#     success_url = reverse_lazy('hotdesk-reservations')
 
-    def form_valid(self, form):
-        form.instance.user = self.request.user
-        return super().form_valid(form)
+#     def form_valid(self, form):
+#         form.instance.user = self.request.user
+#         return super().form_valid(form)
 
-    def test_func(self):
-        reservation = self.get_object()
-        if self.request.user == reservation.user:
-            return True
-        return False
+#     def test_func(self):
+#         reservation = self.get_object()
+#         if self.request.user == reservation.user:
+#             return True
+#         return False
 
 
 class ReservationDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
@@ -94,25 +83,58 @@ class ReservationDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView)
             return True
         return False
 
-# pick room
-# class ReservationCreateView(CreateView):
-#     model = Room
-#     fields = [ 'room', 'start_date', 'end_date']
-#     template_name = 'hotdesk/new_reservation.html'
+@login_required
+def reservation_function(request):
 
+    #submit data preserved from previous request  on form
+    submit_data = request.POST.get('room')
+    room_data = SearchRoomForm(request.POST or None)
 
-def about(request):
-    context = {'page_text':"About Page",}
-    return render( request, 'hotdesk/about.html', context)
+    if request.POST.get('room'):
+        selected_room= request.POST.get('room')
+        selected_start_date = request.POST.get('start_date')
+        selected_end_date = request.POST.get('end_date')
 
-# @login_required
-# def reservation(request, reservation_id):
-#     try:
-#         reservation_object = Reservation.objects.get(pk=reservation_id)
-#         start_date = reservation_object.start_date
-#         end_date = reservation_object.end_date
-#         response = f"Reservation ID: {reservation_id} Start Date: {start_date} End Date: {end_date}"
-#     except Reservation.DoesNotExist:
-#         raise Http404("Reservation does not exist")
-#     return render(request, 'hotdesk/reservation.html', {'reservation': response,})
+    if 'search_room' in request.POST:
 
+        if selected_end_date < selected_start_date:
+            messages.warning(request, f"End date can't be earlier than start date!")
+            context = {
+                'room_data' : room_data,
+            }
+            return render(request, 'hotdesk/reservation_new.html', context) 
+
+        available_desks = Desk.objects.filter(room__id = selected_room).exclude(
+            reservation__start_date__lte=selected_end_date,
+            reservation__end_date__gte = selected_start_date)        
+
+    elif 'reserve_desk_number' in request.POST:
+        desk_id = request.POST.get('reserve_desk_number')
+
+        Reservation.objects.create(user=request.user, start_date= selected_start_date, end_date=selected_end_date, desk_id = desk_id)
+
+        context = {
+            'user' : request.user,
+            'selected_room' : selected_room,
+            'selected_start_date' : selected_start_date,
+            'selected_end_date' : selected_end_date,
+            'submit_data' : submit_data
+        }
+        return render(request, 'hotdesk/reservations.html', context) 
+    
+    else:
+        available_desks = ''
+        selected_room = ''
+        selected_start_date = ''
+        selected_end_date = ''
+
+    context = {
+        'available_desks' : available_desks,
+        'room_data' : room_data,
+        'selected_room' : selected_room,
+        'selected_start_date' : selected_start_date,
+        'selected_end_date' : selected_end_date,
+        'submit_data' : submit_data
+    }
+
+    return render(request, 'hotdesk/reservation_new.html', context)

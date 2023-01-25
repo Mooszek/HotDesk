@@ -1,0 +1,28 @@
+{% extends "hotdesk/base.html" %}
+{% load crispy_forms_tags%}
+{% block content %}
+<body>
+
+    <div class="container">
+        <form method="POST" action="{% url 'hotdesk-reservations-new' %}">
+            {% csrf_token %}
+            {{ room_data|crispy }}
+            <input type="submit" name="search_room" >
+    </div>
+    <div class="container"> 
+        <h2>Available desks</h2>
+            {% for desk in available_desks %}
+            <article class="media content-section">
+                <div class="media-body">
+                    {{ desk.desk_label }}
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-outline-primary" type="submit" name="reserve_desk_number" value={{desk.id}}>Create New Reservation</button>
+                </div>
+            </article>
+            {% endfor %}
+        </form>
+    </div>
+    
+    </body>
+{% endblock content%}
