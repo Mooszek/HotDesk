@@ -2,7 +2,7 @@
 
 {% block content %}
     <div>
-        <h2>Active reservations</h2>
+        <h2>Reservation history</h2>
     </div>
     {% for reservations in reservations %}
     <div>
@@ -18,7 +18,6 @@
                 <!-- <p class="article-content">Status - {{ reservations.status }}</p> -->
                 <!-- <a class="btn btn-outline-danger" href="{% url 'hotdesk-reservation-delete' pk=reservations.id %}">Cancel reservation</a> -->
         </div>
-        <a class="btn btn-outline-danger" href="{% url 'hotdesk-reservation-delete' pk=reservations.id %}">Cancel reservation</a>
         </article>
     </div>
     {% endfor %}

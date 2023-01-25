@@ -140,5 +140,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap5'
 
-LOGIN_REDIRECT_URL = 'hotdesk-index'
+LOGIN_REDIRECT_URL = 'hotdesk-homepage'
 LOGIN_URL = 'login'

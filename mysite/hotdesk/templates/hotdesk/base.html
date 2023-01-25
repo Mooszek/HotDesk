@@ -19,17 +19,17 @@
     <header class="site-header">
         <nav class="navbar navbar-expand-md navbar-dark bg fixed-top">
           <div class="container">
-            <a class="navbar-brand mr-5" href="{% url 'hotdesk-index' %}">Hotdesk App</a>
+            <a class="navbar-brand mr-5" href="{% url 'hotdesk-homepage' %}">Hotdesk App</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarToggle">
               <div class="navbar-nav mr-auto">
-                <a class="nav-item nav-link" href="{% url 'hotdesk-index' %}">Home</a>
+                <a class="nav-item nav-link" href="{% url 'hotdesk-homepage' %}">Home</a>
                 {% if user.is_authenticated %}
                   <a class="nav-item nav-link" href="{% url 'hotdesk-reservations-new' %}">New reservation</a>
                   <a class="nav-item nav-link" href="{% url 'hotdesk-reservations' %}">My reservations</a>
-                  <a class="nav-item nav-link" href="{% url 'hotdesk-reservations' %}">Reservation History</a>
+                  <a class="nav-item nav-link" href="{% url 'hotdesk-reservations-history' %}">Reservation History</a>
                 {% endif %}
               </div>
               <!-- Navbar Right Side -->
@@ -49,7 +49,7 @@
     
     <main role="main" class="container">
         <div class="row">
-          <div class="col-md-8">
+          <div class="col-md-10">
             {% if messages %}
               {% for message in messages %}
                 <div class="alert alert-{{ message.tags }}"> 

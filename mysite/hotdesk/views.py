@@ -12,14 +12,14 @@ from .forms import SearchRoomForm
 
 # Create your views here.
 @login_required
-def index(request):
+def homepage(request):
     context = {'page_text':"Main page",}
-    return render( request, 'hotdesk/index.html', context)
+    return render( request, 'hotdesk/homepage.html', context)
 
 
-class TodaysReservationListView(ListView):
+class TodaysReservationListView(LoginRequiredMixin,ListView):
     model = Reservation
-    template_name = 'hotdesk/index.html'
+    template_name = 'hotdesk/homepage.html'
     context_object_name = 'reservations'
     ordering = ['start_date']
 
@@ -35,6 +35,15 @@ class ReservationListView(LoginRequiredMixin, ListView):
     def get_queryset(self):
         return Reservation.objects.filter(user=self.request.user)
 
+class ReservationHistoryListView(LoginRequiredMixin, ListView):
+    model = Reservation
+    template_name = 'hotdesk/reservations_history.html'
+    context_object_name = 'reservations'
+    ordering = ['start_date']
+
+    def get_queryset(self):
+        return Reservation.objects.filter(user=self.request.user, end_date__lt = date.today())
+
 #class to see single reservation
 class ReservationDetailView(LoginRequiredMixin, DetailView):
     model = Reservation
@@ -42,34 +51,6 @@ class ReservationDetailView(LoginRequiredMixin, DetailView):
 
     def get_queryset(self):
         return Reservation.objects.filter(user=self.request.user)
-
-# # not used
-# class ReservationCreateView(LoginRequiredMixin, CreateView):
-#     model = Reservation
-#     fields = [ 'desk', 'start_date', 'end_date']
-#     template_name = 'hotdesk/new_reservation.html'
-#     success_url = reverse_lazy('hotdesk-reservations')
-
-#     def form_valid(self, form):
-#         form.instance.user = self.request.user
-#         return super().form_valid(form)
-
-# #not used
-# class ReservationUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
-#     model = Reservation
-#     fields = [ 'desk', 'start_date', 'end_date']
-#     template_name = 'hotdesk/new_reservation.html'
-#     success_url = reverse_lazy('hotdesk-reservations')
-
-#     def form_valid(self, form):
-#         form.instance.user = self.request.user
-#         return super().form_valid(form)
-
-#     def test_func(self):
-#         reservation = self.get_object()
-#         if self.request.user == reservation.user:
-#             return True
-#         return False
 
 
 class ReservationDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
@@ -120,7 +101,8 @@ def reservation_function(request):
             'selected_end_date' : selected_end_date,
             'submit_data' : submit_data
         }
-        return render(request, 'hotdesk/reservations.html', context) 
+        #return render(request, 'hotdesk/reservations.html', context) 
+        return redirect('/hotdesk/reservations')
     
     else:
         available_desks = ''
@@ -138,3 +120,32 @@ def reservation_function(request):
     }
 
     return render(request, 'hotdesk/reservation_new.html', context)
+
+
+    # # not used
+# class ReservationCreateView(LoginRequiredMixin, CreateView):
+#     model = Reservation
+#     fields = [ 'desk', 'start_date', 'end_date']
+#     template_name = 'hotdesk/new_reservation.html'
+#     success_url = reverse_lazy('hotdesk-reservations')
+
+#     def form_valid(self, form):
+#         form.instance.user = self.request.user
+#         return super().form_valid(form)
+
+# #not used
+# class ReservationUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+#     model = Reservation
+#     fields = [ 'desk', 'start_date', 'end_date']
+#     template_name = 'hotdesk/new_reservation.html'
+#     success_url = reverse_lazy('hotdesk-reservations')
+
+#     def form_valid(self, form):
+#         form.instance.user = self.request.user
+#         return super().form_valid(form)
+
+#     def test_func(self):
+#         reservation = self.get_object()
+#         if self.request.user == reservation.user:
+#             return True
+#         return False

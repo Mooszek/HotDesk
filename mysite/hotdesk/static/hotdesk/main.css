@@ -86,11 +86,6 @@ body {
   .form-control {
     height: 42px;
   }
-
-  /* label.required::after {
-    content: ' *';
-    color: red;
-  } */
   
   .asteriskField {
     display: none;
@@ -123,4 +118,10 @@ body {
     color: #721c24;
     background-color: #f8d7da;
     border-color: #f5c6cb;
+}
+
+body > main > div > div > form > div:nth-child(2) > input[type=submit]:nth-child(7) {
+  border: 1px solid #ced4da;
+  border-radius: 5px;
+  text-align: center;
 }
