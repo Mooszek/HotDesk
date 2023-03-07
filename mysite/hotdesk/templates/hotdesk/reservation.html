@@ -1,0 +1,18 @@
+{% extends "hotdesk/base.html" %}
+{% block content %}
+    <div>
+        <article class="media content-section">
+        <img class="rounded-circle article-img" src="{{ object.user.profile.image.url }}">
+            <div class="media-body">
+                <div class="article-metadata">
+                    <a class="mr-3" href="#">{{ object.user }}</a>
+                    <a class="text-muted">{{ object.start_date|date:"F d, Y" }} - </a>
+                    <a class="text-muted">{{ object.end_date|date:"F d, Y" }}</a>
+                </div>
+                <h4><a class="article-title" href="#">{{ object.desk }}</a></h4>
+                <p class="article-content">Status - {{ object.status }}</p>
+                <a class="btn btn-outline-danger" href="{% url 'hotdesk-reservations' %}">Go Back</a>
+            </div>
+        </article>
+    </div>
+{% endblock content%}
